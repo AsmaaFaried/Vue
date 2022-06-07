@@ -17,7 +17,7 @@
         <admins-app/>
       </div>
       <div v-else>
-        <h3>Nothing to select</h3>
+        <form-app @data="addData"/>
       </div>
      
       </center>
@@ -29,47 +29,50 @@
 import formApp from './components/form.vue'
 import studentsApp from './components/students.vue'
 import adminsApp from './components/admins.vue'
+import { provide, ref } from 'vue'
 export default {
   components:{
     formApp,
     studentsApp,
     adminsApp
   },
-  provide(){
-    return {
-      students:this.students,
-      admins:this.admins
-      }
-  },
   name: 'App',
-  data(){
-    return{
-      key:0,
-      students:[],
-      admins:[]
-      }
-    
-  },
-      methods:{
-        formComp(){
-          this.key=1;
-        },
-        stdsComp(){
+  setup(){
+    const key=ref(0)
+    const students=ref([])
+    const admins=ref([])
+
+    provide('students',students)
+    provide('admins',admins)
+
+    function formComp(){
+        this.key=1;
+        }
+    function stdsComp(){
           this.key=2;
-        },
-        adminsComp(){
+        }
+    function adminsComp(){
           this.key=3;
-        },
-        addData(user){
+        }
+    function addData(user){
           if(user.userType==='Student'){
-             this.students.push({user})
+            students.value.push({user})
           }
           if(user.userType==='Admin'){
-             this.admins.push({user})
+            admins.value.push({user})
           }
-        },
-        
+        }
+    return{
+      key,
+      students,
+      admins,
+      formComp,
+      stdsComp,
+      adminsComp,
+      addData
     }
+  },
+
 }
 </script>
 

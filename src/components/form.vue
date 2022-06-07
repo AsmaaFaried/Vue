@@ -1,35 +1,41 @@
 <template>
     <div>
-        <form @submit.prevent="addUser">
-            <input type="text" placeholder="Enter Name" v-model.trim="userData.username" /><br/>
-            <input type="number" placeholder="Enter Age" min="0" max="100" v-model.number="userData.age"/><br/>
-            <input type="text" placeholder="Enter Address" v-model.trim="userData.address"/><br/>
-            <label><input type="radio" name="type" value="Student" v-model="userData.userType"/>Student</label><br/>
-            <label><input type="radio" name="type" value="Admin" v-model="userData.userType"/>Admin</label><br/>
-            <button @click="$emit('data',userData)">Add User</button>
+        <form @submit.prevent="senduser">
+            <input type="text" placeholder="Enter Name" v-model.trim="username" ref="inpref" /><br/>
+            <input type="number" placeholder="Enter Age" min="0" max="100" v-model.number="age"/><br/>
+            <input type="text" placeholder="Enter Address" v-model.trim="address"/><br/>
+            <label><input type="radio" name="type" value="Student" v-model="userType"/>Student</label><br/>
+            <label><input type="radio" name="type" value="Admin" v-model="userType"/>Admin</label><br/>
+            <button>Add User</button>
         </form>
     </div>
 </template>
 
 <script>
+import { reactive, ref, toRefs } from '@vue/reactivity'
+import { onMounted } from 'vue'
     export default {
         name:"formApp",
         emits:['data'],
-        data(){
-            return{
-                userData:{
-                    username:'',
-                    age:0,
-                    address:'',
-                    userType:''
-                }
+        setup(props,context){
+            const inpref=ref(null)
+            const userData=reactive({
+                username:'',
+                age:0,
+                address:'',
+                userType:''
+            })
+            onMounted(()=>{
+                inpref.value.focus()
+            })
+            function senduser(){
+                context.emit('data',userData)
             }
-        },
-        methods:{
-            addUser(){
-                console.log('User : ',this.userData)
+            return{
+                ...toRefs(userData),senduser,inpref
             }
         }
+       
     }
 </script>
 

@@ -17,9 +17,16 @@
 </template>
 
 <script>
+import { inject } from 'vue'
+
     export default {
         name:"adminsApp",
-        inject:['admins'],
+        setup(){
+            const admins=inject("admins")
+            return{
+                admins
+            }
+        }
        
     }
 </script>
